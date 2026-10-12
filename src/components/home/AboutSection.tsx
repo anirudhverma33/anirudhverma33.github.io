@@ -39,7 +39,7 @@ export default function AboutSection({ photo, text, role, contact, profiles }: P
           delay={0}
           y={40}
           className="hero-heading text-center font-black uppercase leading-none tracking-tight"
-          style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
+          style={{ fontSize: 'clamp(2.25rem, 6vw, 84px)' }}
         >
           About me
         </FadeIn>

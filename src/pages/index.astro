@@ -86,6 +86,9 @@ const projectData: ProjectData[] = await Promise.all(
   }),
 );
 
+// Homepage shows the main research roles; the full list is on /about/.
+const mainExperience = experience.filter((e) => !e.place.startsWith('Mondal Lab'));
+
 const contact = `mailto:${person.email}`;
 const links = { about: '#about', research: '#research', papers: url('/papers/'), contact };
 const aboutText =
@@ -116,14 +119,14 @@ const jsonLd = {
   />
   <MarqueeSection client:visible images={marqueeImages} />
   <AboutSection client:visible photo={photoImg} text={aboutText} role={person.role} contact={contact} profiles={profiles} />
-  <ExperienceSection client:visible items={experience} />
+  <ExperienceSection client:visible items={mainExperience} moreHref={url('/about/')} />
   <ProjectsSection client:visible projects={projectData} />
 
   <section aria-labelledby="ml-home-h" class="bg-[#0C0C0C] px-5 pb-10 pt-10 sm:px-8 md:px-10">
     <h2
       id="ml-home-h"
       class="hero-heading mb-12 text-center font-black uppercase leading-none tracking-tight sm:mb-16"
-      style="font-size: clamp(3rem, 12vw, 160px)"
+      style="font-size: clamp(2.25rem, 6vw, 84px)"
     >
       Machine learning
     </h2>
@@ -154,40 +157,4 @@ const jsonLd = {
     </p>
   </section>
 
-  <section aria-labelledby="papers-h" class="bg-[#0C0C0C] px-5 pb-10 pt-10 sm:px-8 md:px-10">
-    <h2
-      id="papers-h"
-      class="hero-heading mb-12 text-center font-black uppercase leading-none tracking-tight sm:mb-16"
-      style="font-size: clamp(3rem, 12vw, 160px)"
-    >
-      Papers
-    </h2>
-    <ol class="mx-auto max-w-5xl list-none">
-      {
-        publications.map((p, i) => {
-          const href = p.doi ? `https://doi.org/${p.doi}` : `https://arxiv.org/abs/${p.arxiv}`;
-          return (
-            <li class="flex flex-col gap-2 py-7 sm:flex-row sm:gap-10" style={i ? 'border-top: 1px solid rgba(215, 226, 234, 0.15)' : undefined}>
-              <p class="shrink-0 text-sm font-medium uppercase tracking-widest text-[#8E9AA3] sm:w-24 sm:pt-1">{p.year}</p>
-              <div class="flex flex-col gap-2">
-                <h3 class="font-medium leading-snug text-[#D7E2EA]" style="font-size: clamp(1rem, 1.8vw, 1.5rem)">
-                  <a href={href} class="text-[#D7E2EA] no-underline transition-opacity duration-200 hover:opacity-70">{p.title}</a>
-                </h3>
-                <p class="text-sm font-light text-[#D7E2EA]/70 sm:text-base">{p.authors.join(', ')}</p>
-                <p class="text-xs font-light uppercase tracking-widest text-[#8E9AA3] sm:text-sm">{statusText(p)}</p>
-              </div>
-            </li>
-          );
-        })
-      }
-    </ol>
-    <p class="mx-auto mt-10 max-w-5xl text-center">
-      <a
-        href={url('/papers/')}
-        class="inline-flex items-center gap-2 rounded-full border-2 border-solid border-[#D7E2EA] px-8 py-3 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] no-underline transition-colors duration-200 hover:bg-[#D7E2EA]/10 sm:px-10 sm:py-3.5 sm:text-base"
-      >
-        Abstracts, theses and BibTeX
-      </a>
-    </p>
-  </section>
 </Base>

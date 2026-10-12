@@ -39,8 +39,8 @@ export default function HeroSection({ firstName, tagline, portrait, links }: Pro
           as="h1"
           delay={0.15}
           y={40}
-          className="hero-heading mt-6 w-full whitespace-nowrap text-center font-black uppercase leading-none tracking-tight sm:mt-4 md:-mt-3"
-          style={{ fontSize: '13.2vw' }}
+          className="hero-heading mt-8 w-full whitespace-nowrap text-center font-black uppercase leading-none tracking-tight sm:mt-6 md:mt-4"
+          style={{ fontSize: 'clamp(2.5rem, 8vw, 8rem)' }}
         >
           Hi, i&apos;m {firstName}
         </FadeIn>

@@ -36,7 +36,7 @@ function Card({ p, index, total, progress }: { p: ProjectData; index: number; to
         className="relative w-full max-w-6xl rounded-[40px] border-2 border-solid border-[#D7E2EA] bg-[#0C0C0C] p-4 sm:rounded-[50px] sm:p-6 md:rounded-[60px] md:p-8"
       >
         <div className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-3 px-2 sm:mb-6 md:px-4">
-          <span aria-hidden="true" className="hero-heading font-black leading-[0.85]" style={{ fontSize: 'clamp(3rem, 8vw, 110px)' }}>
+          <span aria-hidden="true" className="hero-heading font-black leading-[0.85]" style={{ fontSize: 'clamp(2.25rem, 5vw, 72px)' }}>
             {String(index + 1).padStart(2, '0')}
           </span>
           <div className="flex min-w-0 flex-1 basis-[240px] flex-col gap-1">
@@ -76,7 +76,7 @@ export default function ProjectsSection({ projects }: { projects: ProjectData[] 
         id="research-h"
         y={40}
         className="hero-heading mb-12 text-center font-black uppercase leading-none tracking-tight sm:mb-16"
-        style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
+        style={{ fontSize: 'clamp(2.25rem, 6vw, 84px)' }}
       >
         Research
       </FadeIn>
