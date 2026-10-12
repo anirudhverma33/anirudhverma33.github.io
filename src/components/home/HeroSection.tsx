@@ -48,7 +48,7 @@ export default function HeroSection({ name, intro, current, portrait, links, cv 
             height={portrait.height}
             alt={portrait.alt}
             className="block h-auto w-full rounded-[28px] border border-solid border-[#D7E2EA]/15"
-            style={{ backgroundColor: '#F4F2EE', boxShadow: '0 24px 80px rgba(118, 33, 176, 0.22)' }}
+            style={{ boxShadow: '0 24px 80px rgba(118, 33, 176, 0.22)' }}
             fetchPriority="high"
           />
         </FadeIn>

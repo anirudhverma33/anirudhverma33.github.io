@@ -7,8 +7,7 @@ import AboutSection from '../components/home/AboutSection';
 import ExperienceSection from '../components/home/ExperienceSection';
 import ProjectsSection from '../components/home/ProjectsSection';
 import type { Img, ProjectData } from '../components/home/types';
-import sketch from '../assets/portrait-sketch.jpg';
-import avatar from '../assets/portrait-avatar.jpg';
+import photo from '../assets/photo-home.jpg';
 import { person, profiles, url } from '../lib/site';
 import { projects, methodLabel, mlProjects } from '../lib/projects';
 import { publications, statusText } from '../lib/publications';
@@ -21,18 +20,14 @@ async function img(src: ImageMetadata, alt: string, widths: number[]): Promise<I
   return { src: out.src, srcSet: out.srcSet.attribute, width: src.width, height: src.height, alt };
 }
 
-// Hero: pencil sketch generated from portrait.jpg (4:5, 1280 x 1600).
-const sketchImg: Img = {
-  src: (await getImage({ src: sketch, width: 800, format: 'webp' })).src,
-  srcSet: (await getImage({ src: sketch, widths: [440, 800, 1280], format: 'webp' })).srcSet.attribute,
-  width: 1280,
-  height: 1600,
-  alt: 'Pencil sketch of Anirudh Verma.',
+// Hero photo (from documents/images, cropped to 4:5).
+const heroImg: Img = {
+  src: (await getImage({ src: photo, width: 680, format: 'webp' })).src,
+  srcSet: (await getImage({ src: photo, widths: [340, 680, 840], format: 'webp' })).srcSet.attribute,
+  width: photo.width,
+  height: photo.height,
+  alt: 'Anirudh Verma.',
 };
-
-// About: small circular photo (portrait-avatar.jpg is a square face crop of portrait.jpg).
-const photoCrop = await getImage({ src: avatar, width: 320, format: 'webp' });
-const photoImg: Img = { src: photoCrop.src, width: 320, height: 320, alt: 'Anirudh Verma on a bridge above a forested river valley.' };
 
 const projectData: ProjectData[] = await Promise.all(
   projects.map(async (p) => {
@@ -56,7 +51,7 @@ const mainExperience = experience.filter((e) => !e.place.startsWith('Mondal Lab'
 const contact = `mailto:${person.email}`;
 const links = { about: '#about', research: '#research', papers: url('/papers/'), contact };
 const aboutText =
-  "I studied physics at IISc Bengaluru (BS and MS) and now work there as a project assistant in the Quantum Optics & Quantum Information Lab. Much of my work is with entangled photons. I worked on a four-qubit photonic setup that produces random numbers anyone can check, and on using it to simulate Popescu–Rohrlich correlations. I also wrote a paper, now under review, that describes gluon scattering amplitudes as quantum walks. My MS thesis was computational, simulating free fermions under continuous measurement. Outside physics, I've been teaching myself machine learning and have built a few projects along the way, including a fine-tuned T5 summariser and a small RAG pipeline.";
+  'I did my BS and MS in physics at IISc Bengaluru, and now work in the Quantum Optics & Quantum Information Lab there. Most of my work is with entangled photons and quantum walks. Outside the lab, I am learning machine learning.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -78,12 +73,12 @@ const jsonLd = {
     client:load
     name={person.name}
     current="Project assistant · QOQI Lab, IISc Bengaluru"
-    intro="I work on quantum optics and quantum information, mostly with entangled photons and quantum walks. On the side, I build machine-learning projects."
-    portrait={sketchImg}
+    intro="I work on quantum optics and quantum information. I also build machine-learning projects."
+    portrait={heroImg}
     links={links}
     cv={url('/cv.pdf')}
   />
-  <AboutSection client:visible photo={photoImg} text={aboutText} role={person.role} contact={contact} />
+  <AboutSection client:visible text={aboutText} contact={contact} />
   <ExperienceSection client:visible items={mainExperience} moreHref={url('/about/')} />
   <ProjectsSection client:visible projects={projectData} />
 

@@ -12,7 +12,7 @@ const [lead, ...rest] = projects;
     <header class="head">
       <h1>Research</h1>
       <p class="lede">
-        Five case studies, each separating the problem, the method, the reported results, my own contribution and that of my collaborators. Machine-learning projects follow below.
+        Projects from my papers and theses, with my machine-learning work further down.
         Glyphs mark the kind of work: <span class="sans">● experimental, ○ theory, ◐ computational.</span>
       </p>
     </header>
@@ -21,7 +21,7 @@ const [lead, ...rest] = projects;
 
     <section class="section" aria-labelledby="ml-h">
       <h2 id="ml-h">Machine learning</h2>
-      <p class="intro">Projects from teaching myself machine learning, from models written in NumPy to a fine-tuned transformer. <a href={url('/research/machine-learning/')}>Read the case study</a> or browse the code on GitHub.</p>
+      <p class="intro">Some machine-learning projects I have built. <a href={url('/research/machine-learning/')}>Read the case study</a> or see the code on GitHub.</p>
       <ul class="ml">
         {mlProjects.map((m) => (
           <li>
