@@ -9,10 +9,9 @@ interface Props {
   portrait: Img;
   links: Links;
   cv?: string;
-  profiles: { label: string; href: string }[];
 }
 
-export default function HeroSection({ name, intro, current, portrait, links, cv, profiles }: Props) {
+export default function HeroSection({ name, intro, current, portrait, links, cv }: Props) {
   return (
     <section className="relative flex min-h-[80vh] flex-col" style={{ overflowX: 'clip' }}>
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col-reverse items-center gap-12 px-6 py-16 md:flex-row md:items-center md:justify-between md:gap-16 md:px-10">
@@ -37,20 +36,6 @@ export default function HeroSection({ name, intro, current, portrait, links, cv,
           <FadeIn delay={0.4} y={20} className="flex flex-wrap items-center gap-4 pt-2">
             <ContactButton href={links.contact} />
             {cv && <GhostButton href={cv} label="CV" />}
-          </FadeIn>
-          <FadeIn delay={0.5} y={10}>
-            <ul className="flex list-none flex-wrap gap-x-6 gap-y-1 pt-2">
-              {profiles.map((p) => (
-                <li key={p.label}>
-                  <a
-                    href={p.href}
-                    className="inline-block py-1 text-sm font-medium uppercase tracking-wider text-[#8E9AA3] underline decoration-[#646973] underline-offset-4 transition-colors duration-200 hover:text-[#D7E2EA]"
-                  >
-                    {p.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
           </FadeIn>
         </div>
 
