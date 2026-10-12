@@ -1,16 +1,18 @@
 import FadeIn from './FadeIn';
-import Magnet from './Magnet';
-import { ContactButton } from './Buttons';
+import { ContactButton, GhostButton } from './Buttons';
 import type { Img, Links } from './types';
 
 interface Props {
-  firstName: string;
-  tagline: string;
+  name: string;
+  intro: string;
+  current: string;
   portrait: Img;
   links: Links;
+  cv?: string;
+  profiles: { label: string; href: string }[];
 }
 
-export default function HeroSection({ firstName, tagline, portrait, links }: Props) {
+export default function HeroSection({ name, intro, current, portrait, links, cv, profiles }: Props) {
   const nav = [
     { label: 'About', href: links.about },
     { label: 'Research', href: links.research },
@@ -18,14 +20,14 @@ export default function HeroSection({ firstName, tagline, portrait, links }: Pro
     { label: 'Contact', href: links.contact },
   ];
   return (
-    <section className="relative flex h-screen min-h-[560px] flex-col" style={{ overflowX: 'clip' }}>
+    <section className="relative flex min-h-[88vh] flex-col" style={{ overflowX: 'clip' }}>
       <FadeIn as="nav" delay={0} y={-20} aria-label="Main" className="relative z-20 px-6 pt-6 md:px-10 md:pt-8">
         <ul className="flex list-none justify-between">
           {nav.map((n) => (
             <li key={n.label}>
               <a
                 href={n.href}
-                className="inline-block py-2 text-sm font-medium uppercase tracking-wider text-[#D7E2EA] no-underline transition-opacity duration-200 hover:opacity-70 md:text-lg lg:text-[1.4rem]"
+                className="inline-block py-2 text-sm font-medium uppercase tracking-wider text-[#D7E2EA] no-underline transition-opacity duration-200 hover:opacity-70 md:text-base"
               >
                 {n.label}
               </a>
@@ -34,47 +36,57 @@ export default function HeroSection({ firstName, tagline, portrait, links }: Pro
         </ul>
       </FadeIn>
 
-      <div className="overflow-hidden">
-        <FadeIn
-          as="h1"
-          delay={0.15}
-          y={40}
-          className="hero-heading mt-8 w-full whitespace-nowrap text-center font-black uppercase leading-none tracking-tight sm:mt-6 md:mt-4"
-          style={{ fontSize: 'clamp(2.5rem, 8vw, 8rem)' }}
-        >
-          Hi, i&apos;m {firstName}
-        </FadeIn>
-      </div>
-
-      <div className="relative z-20 mt-auto flex items-end justify-between px-6 pb-7 sm:pb-8 md:px-10 md:pb-10">
-        <FadeIn delay={0.35} y={20}>
-          <p
-            className="max-w-[160px] font-light uppercase leading-snug tracking-wide text-[#D7E2EA] sm:max-w-[220px] md:max-w-[260px]"
-            style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}
+      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col-reverse items-center gap-12 px-6 py-16 md:flex-row md:items-center md:justify-between md:gap-16 md:px-10">
+        <div className="flex max-w-2xl flex-col gap-6">
+          <FadeIn delay={0.1} y={20}>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#8E9AA3] sm:text-sm">{current}</p>
+          </FadeIn>
+          <FadeIn
+            as="h1"
+            delay={0.2}
+            y={30}
+            className="hero-heading font-black uppercase leading-[0.95] tracking-tight"
+            style={{ fontSize: 'clamp(2.75rem, 6.5vw, 5.75rem)' }}
           >
-            {tagline}
-          </p>
-        </FadeIn>
-        <FadeIn delay={0.5} y={20}>
-          <ContactButton href={links.contact} />
-        </FadeIn>
-      </div>
+            {name}
+          </FadeIn>
+          <FadeIn delay={0.3} y={20}>
+            <p className="max-w-xl font-light leading-relaxed text-[#D7E2EA]/85" style={{ fontSize: 'clamp(1.05rem, 1.6vw, 1.3rem)' }}>
+              {intro}
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.4} y={20} className="flex flex-wrap items-center gap-4 pt-2">
+            <ContactButton href={links.contact} />
+            {cv && <GhostButton href={cv} label="CV" />}
+          </FadeIn>
+          <FadeIn delay={0.5} y={10}>
+            <ul className="flex list-none flex-wrap gap-x-6 gap-y-1 pt-2">
+              {profiles.map((p) => (
+                <li key={p.label}>
+                  <a
+                    href={p.href}
+                    className="inline-block py-1 text-sm font-medium uppercase tracking-wider text-[#8E9AA3] underline decoration-[#646973] underline-offset-4 transition-colors duration-200 hover:text-[#D7E2EA]"
+                  >
+                    {p.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </FadeIn>
+        </div>
 
-      <div className="absolute left-1/2 top-1/2 z-10 w-[min(280px,70vw)] -translate-x-1/2 -translate-y-1/2 sm:bottom-0 sm:top-auto sm:w-[min(360px,50vh)] sm:translate-y-0 md:w-[min(440px,54vh)] lg:w-[min(520px,58vh)]">
-        <FadeIn delay={0.6} y={30}>
-          <Magnet padding={150} strength={3} activeTransition="transform 0.3s ease-out" inactiveTransition="transform 0.6s ease-in-out">
-            <img
-              src={portrait.src}
-              srcSet={portrait.srcSet}
-              sizes="(min-width: 1024px) 520px, (min-width: 768px) 440px, 360px"
-              width={portrait.width}
-              height={portrait.height}
-              alt={portrait.alt}
-              className="block h-auto w-full rounded-[32px] sm:rounded-b-none sm:rounded-t-[48px]"
-              style={{ boxShadow: '0 -20px 80px rgba(118, 33, 176, 0.25)', backgroundColor: '#F4F2EE' }}
-              fetchPriority="high"
-            />
-          </Magnet>
+        <FadeIn delay={0.3} y={20} className="w-[min(240px,60vw)] shrink-0 md:w-[300px] lg:w-[340px]">
+          <img
+            src={portrait.src}
+            srcSet={portrait.srcSet}
+            sizes="(min-width: 1024px) 340px, (min-width: 768px) 300px, 240px"
+            width={portrait.width}
+            height={portrait.height}
+            alt={portrait.alt}
+            className="block h-auto w-full rounded-[28px] border border-solid border-[#D7E2EA]/15"
+            style={{ backgroundColor: '#F4F2EE', boxShadow: '0 24px 80px rgba(118, 33, 176, 0.22)' }}
+            fetchPriority="high"
+          />
         </FadeIn>
       </div>
     </section>

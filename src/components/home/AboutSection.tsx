@@ -9,10 +9,9 @@ interface Props {
   text: string;
   role: string;
   contact: string;
-  profiles: { label: string; href: string }[];
 }
 
-export default function AboutSection({ photo, text, role, contact, profiles }: Props) {
+export default function AboutSection({ photo, text, role, contact }: Props) {
   return (
     <section
       id="about"
@@ -59,18 +58,6 @@ export default function AboutSection({ photo, text, role, contact, profiles }: P
             className="mb-2 block h-24 w-24 rounded-full object-cover ring-2 ring-[#D7E2EA]/30 ring-offset-4 ring-offset-[#0C0C0C] sm:h-28 sm:w-28"
           />
           <p className="max-w-[520px] text-center text-sm font-light uppercase tracking-wide text-[#8E9AA3] sm:text-base">{role}</p>
-          <ul className="flex list-none flex-wrap justify-center gap-x-6 gap-y-1">
-            {profiles.map((p) => (
-              <li key={p.label}>
-                <a
-                  href={p.href}
-                  className="inline-block py-2 text-sm font-medium uppercase tracking-wider text-[#D7E2EA] underline decoration-[#646973] underline-offset-4 transition-opacity duration-200 hover:opacity-70"
-                >
-                  {p.label}
-                </a>
-              </li>
-            ))}
-          </ul>
         </FadeIn>
       </div>
 

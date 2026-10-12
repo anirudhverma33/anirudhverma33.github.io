@@ -3,18 +3,12 @@ import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
 import HeroSection from '../components/home/HeroSection';
-import MarqueeSection from '../components/home/MarqueeSection';
 import AboutSection from '../components/home/AboutSection';
 import ExperienceSection from '../components/home/ExperienceSection';
 import ProjectsSection from '../components/home/ProjectsSection';
-import type { Img, ProjectData, Tile } from '../components/home/types';
+import type { Img, ProjectData } from '../components/home/types';
 import sketch from '../assets/portrait-sketch.jpg';
 import avatar from '../assets/portrait-avatar.jpg';
-import mlT5 from '../assets/ml/ml-t5-loss.png';
-import mlRag from '../assets/ml/ml-rag.png';
-import mlNeural from '../assets/ml/ml-neural.png';
-import mlNovagen from '../assets/ml/ml-novagen.png';
-import mlCredit from '../assets/ml/ml-creditwise.png';
 import { person, profiles, url } from '../lib/site';
 import { projects, methodLabel, mlProjects } from '../lib/projects';
 import { publications, statusText } from '../lib/publications';
@@ -39,36 +33,6 @@ const sketchImg: Img = {
 // About: small circular photo (portrait-avatar.jpg is a square face crop of portrait.jpg).
 const photoCrop = await getImage({ src: avatar, width: 320, format: 'webp' });
 const photoImg: Img = { src: photoCrop.src, width: 320, height: 320, alt: 'Anirudh Verma on a bridge above a forested river valley.' };
-
-// Scrolling strip: the clearest figure(s) from each project, physics and machine learning interleaved.
-const research = (slug: string) => url(`/research/${slug}/`);
-const mlHref = (anchor: string) => url(`/research/machine-learning/#${anchor}`);
-const fig = (slug: string, file: string) => {
-  const f = figuresByProject[slug].find((x) => x.src.src.includes(file));
-  if (!f) throw new Error(`No figure ${file} in ${slug}`);
-  return f;
-};
-const strip: { src: ImageMetadata; alt: string; label: string; href: string }[] = [
-  { ...fig('four-qubit-qrng', 'fq-setup'), label: 'Four-qubit QRNG', href: research('four-qubit-qrng') },
-  { src: mlT5, alt: 'Validation loss of T5-small falling from 0.381 to 0.350 over six epochs of fine-tuning on SAMSum.', label: 'T5 summariser', href: mlHref('summariser') },
-  { ...fig('mhv-quantum-walks', 'mhv-five'), label: 'MHV quantum walks', href: research('mhv-quantum-walks') },
-  { ...fig('monitored-fermions', 'ms-entropy-l800'), label: 'Monitored fermions', href: research('monitored-fermions') },
-  { src: mlRag, alt: 'Diagram of the RAG pipeline: PDFs, chunks, embeddings and a Chroma vector store feed a retriever, prompt and LLM.', label: 'RAG pipeline', href: mlHref('rag') },
-  { ...fig('pr-box-simulation', 'pr-setup'), label: 'PR-box simulation', href: research('pr-box-simulation') },
-  { ...fig('entangled-photon-source', 'bs-setup'), label: 'Entangled-photon source', href: research('entangled-photon-source') },
-  { src: mlNeural, alt: 'Test results of four PyTorch networks: 95.6% and R² 0.935 for feed-forward networks, 72.5% on CIFAR-10, 85.2% on IMDB.', label: 'Neural networks', href: mlHref('neural') },
-  { ...fig('four-qubit-qrng', 'fq-encrypt'), label: 'Four-qubit QRNG', href: research('four-qubit-qrng') },
-  { ...fig('mhv-quantum-walks', 'mhv-tree'), label: 'MHV quantum walks', href: research('mhv-quantum-walks') },
-  { src: mlNovagen, alt: 'Accuracy and recall of five classifiers for health-risk prediction; random forest highest at 0.938 accuracy.', label: 'Ensemble learning', href: mlHref('supervised') },
-  { ...fig('monitored-fermions', 'ms-corr-matrix'), label: 'Monitored fermions', href: research('monitored-fermions') },
-  { ...fig('pr-box-simulation', 'pr-chsh'), label: 'PR-box simulation', href: research('pr-box-simulation') },
-  { src: mlCredit, alt: 'F1 scores of three loan-approval classifiers before and after feature engineering.', label: 'Loan approval', href: mlHref('supervised') },
-  { ...fig('four-qubit-qrng', 'fq-nist'), label: 'Four-qubit QRNG', href: research('four-qubit-qrng') },
-  { ...fig('entangled-photon-source', 'bs-depolarisation'), label: 'Entangled-photon source', href: research('entangled-photon-source') },
-];
-const marqueeImages: Tile[] = await Promise.all(
-  strip.map(async (t) => ({ ...(await img(t.src, t.alt, [420, 840, 1260])), href: t.href, label: t.label })),
-);
 
 const projectData: ProjectData[] = await Promise.all(
   projects.map(async (p) => {
@@ -112,13 +76,15 @@ const jsonLd = {
 >
   <HeroSection
     client:load
-    firstName="Anirudh"
-    tagline="I work on quantum optics and quantum information at IISc Bengaluru"
+    name={person.name}
+    current="Project assistant · QOQI Lab, IISc Bengaluru"
+    intro="I work on quantum optics and quantum information, mostly with entangled photons and quantum walks. On the side, I build machine-learning projects."
     portrait={sketchImg}
     links={links}
+    cv={url('/cv.pdf')}
+    profiles={profiles}
   />
-  <MarqueeSection client:visible images={marqueeImages} />
-  <AboutSection client:visible photo={photoImg} text={aboutText} role={person.role} contact={contact} profiles={profiles} />
+  <AboutSection client:visible photo={photoImg} text={aboutText} role={person.role} contact={contact} />
   <ExperienceSection client:visible items={mainExperience} moreHref={url('/about/')} />
   <ProjectsSection client:visible projects={projectData} />
 
