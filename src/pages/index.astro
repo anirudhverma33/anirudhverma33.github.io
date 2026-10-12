@@ -51,7 +51,7 @@ const mainExperience = experience.filter((e) => !e.place.startsWith('Mondal Lab'
 const contact = `mailto:${person.email}`;
 const links = { about: '#about', research: '#research', papers: url('/papers/'), contact };
 const aboutText =
-  'I did my BS and MS in physics at IISc Bengaluru, and now work in the Quantum Optics & Quantum Information Lab there. Most of my work is with entangled photons and quantum walks. Outside the lab, I am learning machine learning.';
+  'I did my BS and MS in physics at IISc Bengaluru, and now work in the Quantum Optics & Quantum Information Lab there. In the lab I run entangled-photon experiments in quantum information and work on quantum walks. My MS thesis treated a monitored fermion chain as an open quantum system, and I have used Qiskit for quantum-computing simulations of molecules. Outside the lab, I am learning machine learning.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -66,14 +66,14 @@ const jsonLd = {
 
 <Base
   home
-  description="Anirudh Verma: photonic quantum information, quantum foundations, quantum walks, open quantum many-body systems and applied machine learning. Research, papers and contact."
+  description="Anirudh Verma: photonic quantum information, quantum foundations, quantum walks, open quantum many-body systems, quantum computing and applied machine learning. Research, papers and contact."
   jsonLd={jsonLd}
 >
   <HeroSection
     client:load
     name={person.name}
     current="Project assistant · QOQI Lab, IISc Bengaluru"
-    intro="I work on quantum optics and quantum information. I also build machine-learning projects."
+    intro="I work on quantum information, open quantum systems, quantum walks and quantum computing. I also build machine-learning projects."
     portrait={heroImg}
     links={links}
     cv={url('/cv.pdf')}

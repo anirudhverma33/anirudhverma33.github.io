@@ -6,6 +6,7 @@ export const person = {
     'Quantum foundations and nonlocality',
     'Quantum walks',
     'Open quantum many-body systems',
+    'Quantum computing',
     'Machine learning',
   ],
   email: 'anirudhverma@iisc.ac.in',
