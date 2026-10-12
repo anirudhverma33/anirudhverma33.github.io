@@ -71,7 +71,7 @@ export const service = [
 export const skills = [
   { group: 'Quantum and physics', items: 'Qiskit, Qiskit Nature, QuTiP, QuSpin, TeNPy, PySCF' },
   { group: 'Scientific computing', items: 'Python, NumPy, SciPy, SymPy, Mathematica, MATLAB' },
-  { group: 'Data and machine learning', items: 'PyTorch, scikit-learn, Pandas, SQL' },
+  { group: 'Data and machine learning', items: 'PyTorch, scikit-learn, XGBoost, Hugging Face Transformers, LangChain, sentence-transformers, ChromaDB, Pandas, Matplotlib, Seaborn, SQL' },
   { group: 'Laboratory', items: 'SPDC sources, polarization optics, coincidence counting, state tomography, EMCCD imaging, NIST SP 800-22 testing' },
-  { group: 'Other', items: 'LaTeX, HTML and CSS, Linux' },
+  { group: 'Other', items: 'FastAPI, Flask, LaTeX, HTML and CSS, Linux' },
 ];

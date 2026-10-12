@@ -1,22 +1,37 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import { projects, otherWork } from '../../lib/projects';
+import { projects, otherWork, mlProjects } from '../../lib/projects';
 
 const [lead, ...rest] = projects;
 ---
 
-<Base title="Research" description="Case studies in photonic quantum information, quantum foundations, quantum walks and monitored many-body systems.">
+<Base title="Research" description="Case studies in photonic quantum information, quantum foundations, quantum walks and monitored many-body systems, plus applied machine-learning projects.">
   <div class="wrap">
     <header class="head">
       <h1>Research</h1>
       <p class="lede">
-        Five case studies, each separating the problem, the method, the reported results, my own contribution and that of my collaborators.
+        Five case studies, each separating the problem, the method, the reported results, my own contribution and that of my collaborators. Machine-learning projects follow below.
         Glyphs mark the kind of work: <span class="sans">● experimental, ○ theory, ◐ computational.</span>
       </p>
     </header>
     <ProjectCard project={lead} lead />
     <div class="grid">{rest.map((p) => <ProjectCard project={p} />)}</div>
+
+    <section class="section" aria-labelledby="ml-h">
+      <h2 id="ml-h">Machine learning</h2>
+      <p class="intro">Applied machine-learning projects, from models written in NumPy to fine-tuned transformers. Code and notebooks are on GitHub.</p>
+      <ul class="ml">
+        {mlProjects.map((m) => (
+          <li>
+            <h3><a href={m.repo}>{m.title}</a></h3>
+            <p>{m.summary}</p>
+            {m.result && <p class="r sans">{m.result}</p>}
+            <p class="s sans">{m.stack}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
 
     <section class="section" aria-labelledby="other-h">
       <h2 id="other-h">Other work</h2>
@@ -39,6 +54,15 @@ const [lead, ...rest] = projects;
   .lede .sans { font-size: var(--s-16); color: var(--graphite); }
   .grid { display: grid; gap: 56px 40px; margin-top: 64px; }
   @media (min-width: 760px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .intro { max-width: 60ch; margin: 0 0 8px; color: var(--graphite); }
+  .ml { list-style: none; padding: 0; margin: 0; display: grid; gap: 0 40px; }
+  @media (min-width: 760px) { .ml { grid-template-columns: 1fr 1fr; } }
+  .ml li { padding: 20px 0; border-top: 1px solid var(--hairline); }
+  .ml h3 { font-size: var(--s-21); margin-bottom: 8px; }
+  .ml h3 a { color: var(--ink); text-decoration-color: var(--pump); text-underline-offset: 0.18em; }
+  .ml p { margin: 0 0 4px; font-size: var(--s-16); }
+  .ml .r { font-size: var(--s-14); color: var(--ink); }
+  .ml .s { font-size: var(--s-14); color: var(--graphite); }
   .other { list-style: none; padding: 0; margin: 0; }
   .other li { padding: 20px 0; border-top: 1px solid var(--hairline); }
   .other h3 { font-size: var(--s-21); margin-bottom: 8px; }

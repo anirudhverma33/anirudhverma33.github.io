@@ -10,7 +10,7 @@ import ProjectsSection from '../components/home/ProjectsSection';
 import type { Img, ProjectData } from '../components/home/types';
 import portrait from '../assets/portrait.jpg';
 import { person, profiles, url } from '../lib/site';
-import { projects, methodLabel } from '../lib/projects';
+import { projects, methodLabel, mlProjects } from '../lib/projects';
 import { publications, statusText } from '../lib/publications';
 import { experience } from '../lib/cv';
 import { figuresByProject } from '../lib/gallery';
@@ -60,7 +60,7 @@ const projectData: ProjectData[] = await Promise.all(
 const contact = `mailto:${person.email}`;
 const links = { about: '#about', research: '#research', papers: url('/papers/'), contact };
 const aboutText =
-  'I am a physicist working on quantum information with photons. My experimental work uses entangled photon pairs and a four-qubit photonic platform to generate publicly verifiable random numbers and to simulate Popescu–Rohrlich correlations. My theoretical work develops quantum-walk descriptions of scattering amplitudes, and my MS thesis studied free fermions under continuous measurement.';
+  'I am a physicist working on quantum information with photons. My experimental work uses entangled photon pairs and a four-qubit photonic platform to generate publicly verifiable random numbers and to simulate Popescu–Rohrlich correlations. My theoretical work develops quantum-walk descriptions of scattering amplitudes, and my MS thesis studied free fermions under continuous measurement. Alongside physics I build machine-learning projects, from models written in NumPy to a fine-tuned T5 summariser and a retrieval-augmented generation pipeline.';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -75,7 +75,7 @@ const jsonLd = {
 
 <Base
   home
-  description="Anirudh Verma: photonic quantum information, quantum foundations, quantum walks and open quantum many-body systems. Research, papers and contact."
+  description="Anirudh Verma: photonic quantum information, quantum foundations, quantum walks, open quantum many-body systems and applied machine learning. Research, papers and contact."
   jsonLd={jsonLd}
 >
   <HeroSection
@@ -89,6 +89,41 @@ const jsonLd = {
   <AboutSection client:visible text={aboutText} role={person.role} contact={contact} profiles={profiles} />
   <ExperienceSection client:visible items={experience} />
   <ProjectsSection client:visible projects={projectData} />
+
+  <section aria-labelledby="ml-home-h" class="bg-[#0C0C0C] px-5 pb-10 pt-10 sm:px-8 md:px-10">
+    <h2
+      id="ml-home-h"
+      class="hero-heading mb-12 text-center font-black uppercase leading-none tracking-tight sm:mb-16"
+      style="font-size: clamp(3rem, 12vw, 160px)"
+    >
+      Machine learning
+    </h2>
+    <ol class="mx-auto max-w-5xl list-none">
+      {
+        mlProjects.map((m, i) => (
+          <li class="flex flex-col gap-2 py-7 sm:flex-row sm:gap-10" style={i ? 'border-top: 1px solid rgba(215, 226, 234, 0.15)' : undefined}>
+            <p class="shrink-0 text-sm font-medium uppercase tracking-widest text-[#8E9AA3] sm:w-24 sm:pt-1">{String(i + 1).padStart(2, '0')}</p>
+            <div class="flex flex-col gap-2">
+              <h3 class="font-medium leading-snug text-[#D7E2EA]" style="font-size: clamp(1rem, 1.8vw, 1.5rem)">
+                <a href={m.repo} class="text-[#D7E2EA] no-underline transition-opacity duration-200 hover:opacity-70">{m.title}</a>
+              </h3>
+              <p class="text-sm font-light text-[#D7E2EA]/70 sm:text-base">{m.summary}</p>
+              {m.result && <p class="text-sm font-light text-[#D7E2EA] sm:text-base">{m.result}</p>}
+              <p class="text-xs font-light uppercase tracking-widest text-[#8E9AA3] sm:text-sm">{m.stack}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="mx-auto mt-10 max-w-5xl text-center">
+      <a
+        href="https://github.com/anirudhverma33/ml-projects"
+        class="inline-flex items-center gap-2 rounded-full border-2 border-solid border-[#D7E2EA] px-8 py-3 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] no-underline transition-colors duration-200 hover:bg-[#D7E2EA]/10 sm:px-10 sm:py-3.5 sm:text-base"
+      >
+        All notebooks on GitHub
+      </a>
+    </p>
+  </section>
 
   <section aria-labelledby="papers-h" class="bg-[#0C0C0C] px-5 pb-10 pt-10 sm:px-8 md:px-10">
     <h2

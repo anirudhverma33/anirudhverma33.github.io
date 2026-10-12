@@ -135,6 +135,59 @@ export const otherWork = [
   },
 ];
 
+// Machine-learning projects. Results are the values printed in the saved notebook outputs
+// (AI_ML_Projects, verified 2026-10-12); each links to its public repository.
+export interface MlProject {
+  title: string;
+  summary: string;
+  stack: string;
+  result?: string;
+  repo: string;
+}
+
+const gh = 'https://github.com/anirudhverma33';
+
+export const mlProjects: MlProject[] = [
+  {
+    title: 'Dialogue summarisation with a fine-tuned T5',
+    summary:
+      'Fine-tuned t5-small on SAMSum chat dialogues with the Hugging Face Trainer and served it as a FastAPI web app with beam-search decoding.',
+    stack: 'PyTorch, Hugging Face Transformers, FastAPI',
+    result: 'Validation loss 0.381 → 0.350 over 6 epochs (4,000 training dialogues)',
+    repo: `${gh}/t5-text-summarizer`,
+  },
+  {
+    title: 'Retrieval-augmented generation over PDFs',
+    summary:
+      'Loads and chunks PDFs, embeds the chunks into a persistent vector store, retrieves the top matches for a query and passes them as context to an LLM.',
+    stack: 'LangChain, sentence-transformers, ChromaDB, Groq LLM',
+    repo: `${gh}/rag-pipeline`,
+  },
+  {
+    title: 'Neural networks in PyTorch',
+    summary:
+      'Feed-forward networks for date-fruit classification and power-plant output regression, a CNN on CIFAR-10 and an RNN for IMDB review sentiment.',
+    stack: 'PyTorch, torchvision, NLTK',
+    result: 'Test accuracy 95.6% (ANN), 72.5% (CIFAR-10 CNN), 85.2% (RNN); R² 0.935 (ANN regression)',
+    repo: `${gh}/ml-projects/tree/main/Deep%20Learning`,
+  },
+  {
+    title: 'Supervised learning projects',
+    summary:
+      'End-to-end classification pipelines for loan approval, health risk and purchase intent: preprocessing, feature engineering, model comparison and tuning.',
+    stack: 'scikit-learn, Pandas',
+    result: 'Random Forest 93.8% accuracy (health risk); logistic regression F1 0.81 (loan approval)',
+    repo: `${gh}/ml-projects`,
+  },
+  {
+    title: 'Machine learning from scratch',
+    summary:
+      'KNN classification and regression, linear regression by gradient descent and least squares, and logistic regression, written in NumPy.',
+    stack: 'NumPy',
+    repo: `${gh}/ml-projects/tree/main/Scratch%20Implementation`,
+  },
+];
+
 export function getProject(slug: string): Project {
   const p = projects.find((x) => x.slug === slug);
   if (!p) throw new Error(`Unknown project ${slug}`);
