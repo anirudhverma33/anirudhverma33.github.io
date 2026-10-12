@@ -1,0 +1,260 @@
+---
+import Base from '../../layouts/Base.astro';
+import Fig from '../../components/Fig.astro';
+import { url } from '../../lib/site';
+import t5Loss from '../../assets/ml/ml-t5-loss.png';
+import rag from '../../assets/ml/ml-rag.png';
+import neural from '../../assets/ml/ml-neural.png';
+import novagen from '../../assets/ml/ml-novagen.png';
+import credit from '../../assets/ml/ml-creditwise.png';
+
+// Every number on this page is copied from a saved notebook output or from the T5
+// trainer_state.json in AI_ML_Projects (checked 2026-10-12). Figures were drawn from those values.
+const gh = 'https://github.com/anirudhverma33';
+const nb = 'Values from the saved notebook outputs.';
+
+const sections = [
+  ['summariser', 'Dialogue summarisation'],
+  ['rag', 'Retrieval-augmented generation'],
+  ['supervised', 'Supervised learning'],
+  ['neural', 'Neural networks'],
+  ['scratch', 'From scratch'],
+  ['gaps', 'Known gaps'],
+];
+---
+
+<Base title="Machine learning" description="Machine-learning projects by Anirudh Verma: a fine-tuned T5 summariser, a RAG pipeline, supervised learning and PyTorch networks.">
+  <div class="wrap case">
+    <header class="head">
+      <p class="meta sans"><span aria-hidden="true">◐</span> Computational, applied machine learning</p>
+      <h1>Machine learning projects</h1>
+      <p class="lede">
+        Projects I built while teaching myself machine learning, from models written in NumPy to a fine-tuned
+        transformer served as a web app. Code and notebooks are on GitHub.
+      </p>
+      <dl class="facts">
+        <div><dt>Setting</dt><dd>Self-directed, alongside my physics work</dd></div>
+        <div><dt>Period</dt><dd>2026</dd></div>
+        <div><dt>Stack</dt><dd>Python, PyTorch, scikit-learn, Hugging Face Transformers, LangChain, ChromaDB, FastAPI</dd></div>
+        <div>
+          <dt>Code</dt>
+          <dd class="links sans">
+            <a href={`${gh}/t5-text-summarizer`}>t5-text-summarizer</a>
+            <a href={`${gh}/rag-pipeline`}>rag-pipeline</a>
+            <a href={`${gh}/ml-projects`}>ml-projects</a>
+          </dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="layout">
+      <nav class="toc" aria-label="On this page">
+        <details open>
+          <summary>Contents</summary>
+          <ol>
+            {sections.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}
+          </ol>
+        </details>
+      </nav>
+
+      <div class="body">
+        <section id="summariser">
+          <h2>Dialogue summarisation with a fine-tuned T5</h2>
+          <p>
+            The goal was a model that turns a chat conversation into a one- or two-sentence summary. I fine-tuned
+            <code>t5-small</code> on SAMSum, a dataset of messenger-style dialogues with human-written summaries, and
+            wrapped the result in a small web app.
+          </p>
+          <h3>Approach</h3>
+          <ul>
+            <li>Sampled 4,000 training and 500 validation dialogues from SAMSum (fixed random seed).</li>
+            <li>Cleaned the text (line breaks, extra whitespace, HTML tags, lower case) and tokenised it with the T5 tokenizer: 512 tokens for dialogues, 150 for summaries.</li>
+            <li>Fine-tuned with the Hugging Face <code>Trainer</code> for 6 epochs, batch size 8, weight decay 0.01 and 500 warm-up steps, on a CUDA GPU.</li>
+            <li>Served the model with FastAPI: a <code>POST /summarize/</code> endpoint and a simple HTML front end, decoding with 4-beam search.</li>
+          </ul>
+          <h3>Results</h3>
+          <table class="results">
+            <thead><tr><th>Epoch</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead>
+            <tbody><tr><th>Validation loss</th><td>0.381</td><td>0.359</td><td>0.355</td><td>0.351</td><td>0.350</td><td>0.350</td></tr></tbody>
+          </table>
+          <p class="note sans">From the trainer log of the main run. Most of the improvement comes in the first two epochs.</p>
+          <Fig src={t5Loss} alt="Validation loss of T5-small falling from 0.381 to 0.350 over six epochs." caption="Validation loss per epoch while fine-tuning T5-small on SAMSum." source="Drawn from trainer_state.json." />
+          <p class="links sans"><a href={`${gh}/t5-text-summarizer`}>Code on GitHub</a></p>
+        </section>
+
+        <section id="rag">
+          <h2>Retrieval-augmented generation over PDFs</h2>
+          <p>
+            A question-answering pipeline over my own documents. Instead of asking a language model directly, it first
+            finds the passages most relevant to the question and gives them to the model as context.
+          </p>
+          <h3>Approach</h3>
+          <ul>
+            <li>Loaded PDFs and text with LangChain loaders and split them into 500-character chunks with 50 characters of overlap.</li>
+            <li>Embedded the chunks with the sentence-transformer <code>all-MiniLM-L6-v2</code> (384 dimensions) and stored them in a persistent ChromaDB collection with per-chunk metadata.</li>
+            <li>Wrote small classes for the embedding model, the vector store and the retriever.</li>
+            <li>For a question, retrieved the top-k chunks and prompted an LLM served through the Groq API (<code>openai/gpt-oss-120b</code>) to answer from that context.</li>
+          </ul>
+          <Fig src={rag} alt="Diagram of the RAG pipeline: PDFs, chunks, embeddings and a Chroma vector store feed a retriever, prompt and LLM." caption="The pipeline as built in the notebook: ingestion (top row) and answering a question (bottom row)." source="Diagram of RAG_pipeline.ipynb." />
+          <p class="links sans"><a href={`${gh}/rag-pipeline`}>Code on GitHub</a></p>
+        </section>
+
+        <section id="supervised">
+          <h2>Supervised learning projects</h2>
+          <p>
+            Three end-to-end classification problems on tabular data, each with cleaning, encoding, scaling, a train–test
+            split and a comparison of several models.
+          </p>
+          <h3>Loan approval</h3>
+          <p>
+            Predicting whether a loan application is approved from 1,000 records with 20 columns. After imputing missing
+            values and encoding categories, I compared logistic regression, KNN and Gaussian Naive Bayes, then added
+            engineered features such as a squared credit score and log-transformed income.
+          </p>
+          <Fig src={credit} alt="F1 scores of three loan-approval classifiers before and after feature engineering." caption="Test F1 before and after feature engineering. Logistic regression improved most, from 0.78 to 0.81." source={nb} />
+          <h3>Health-risk classification</h3>
+          <p>
+            Classifying 9,800 health records as healthy or unhealthy, comparing single models with ensembles. Random
+            forest did best, with gradient boosting close behind.
+          </p>
+          <Fig src={novagen} alt="Accuracy and recall of five classifiers for health-risk prediction; random forest highest at 0.938 accuracy." caption="Test accuracy and recall on 1,910 held-out records." source={nb} />
+          <h3>Purchase intent</h3>
+          <p>
+            Predicting whether an online shopping session ends in a purchase, from 12,330 sessions. A pruned decision tree
+            in a scikit-learn pipeline with class balancing reached F1 0.628, against a target of 0.55; a grid search over
+            depth and leaf size gave 0.634.
+          </p>
+          <table class="results">
+            <thead><tr><th>Project</th><th>Best model</th><th>Test result</th></tr></thead>
+            <tbody>
+              <tr><td>Loan approval</td><td>Logistic regression, engineered features</td><td>Accuracy 0.88, F1 0.81</td></tr>
+              <tr><td>Health risk</td><td>Random forest, 200 trees</td><td>Accuracy 0.938, recall 0.959</td></tr>
+              <tr><td>Purchase intent</td><td>Pruned decision tree, grid search</td><td>F1 0.634</td></tr>
+              <tr><td>Employee turnover</td><td>Logistic regression, L1</td><td>Accuracy 0.870</td></tr>
+            </tbody>
+          </table>
+          <p class="links sans"><a href={`${gh}/ml-projects`}>Code on GitHub</a></p>
+        </section>
+
+        <section id="neural">
+          <h2>Neural networks in PyTorch</h2>
+          <p>
+            Four networks written in PyTorch, each trained and evaluated on a held-out test set: feed-forward networks for
+            a classification and a regression problem, a convolutional network for images and a recurrent network for text.
+          </p>
+          <Fig src={neural} alt="Test results of four PyTorch networks: 95.6% and R² 0.935 for feed-forward networks, 72.5% on CIFAR-10, 85.2% on IMDB." caption="Held-out test results." source={nb} />
+          <table class="results">
+            <thead><tr><th>Network</th><th>Task</th><th>Test result</th></tr></thead>
+            <tbody>
+              <tr><td>Feed-forward</td><td>Date-fruit variety, 7 classes</td><td>Accuracy 95.6%</td></tr>
+              <tr><td>Feed-forward</td><td>Power-plant energy output (regression)</td><td>R² 0.935</td></tr>
+              <tr><td>Convolutional, 10 epochs</td><td>CIFAR-10 images, 10 classes</td><td>Accuracy 72.5%</td></tr>
+              <tr><td>Recurrent, TF-IDF inputs</td><td>IMDB review sentiment</td><td>Accuracy 85.2%</td></tr>
+            </tbody>
+          </table>
+          <p class="links sans"><a href={`${gh}/ml-projects/tree/main/Deep%20Learning`}>Code on GitHub</a></p>
+        </section>
+
+        <section id="scratch">
+          <h2>Machine learning from scratch</h2>
+          <p>
+            To understand what the libraries do, I wrote several algorithms in NumPy alone: KNN for classification and
+            regression, linear regression by gradient descent and by ordinary least squares, and logistic regression by
+            gradient descent. Alongside these are notebooks on clustering (K-means, hierarchical, DBSCAN), PCA, anomaly
+            detection and SVMs.
+          </p>
+          <p class="links sans"><a href={`${gh}/ml-projects/tree/main/Scratch%20Implementation`}>Code on GitHub</a></p>
+        </section>
+
+        <section id="gaps">
+          <h2>Known gaps</h2>
+          <ul class="statements">
+            <li><p>The summariser has not been scored with ROUGE yet, so the losses above are its only evaluation.</p><p class="basis">The padding tokens in the labels are not masked out, so the loss values are not comparable to published SAMSum results.</p></li>
+            <li><p>The RAG similarity score is computed as 1 − distance on Chroma's default L2 distance, so it is not a true cosine similarity.</p><p class="basis">Creating the collection with cosine distance would fix this.</p></li>
+            <li><p>The recurrent network classifies TF-IDF vectors rather than word sequences, and the stop-word step strips some characters from words.</p><p class="basis">Visible in the preprocessing outputs of the notebook.</p></li>
+          </ul>
+        </section>
+
+        <nav class="pager sans" aria-label="More research">
+          <a href={url('/research/monitored-fermions/')}><span>Previous</span>Free fermions under continuous measurement</a>
+          <a class="next" href={url('/research/')}><span>Back to</span>All research</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head { padding-top: 32px; max-width: 900px; }
+  .meta { font-size: var(--s-14); color: var(--graphite); margin-bottom: 12px; }
+  h1 { font-size: 2.25rem; }
+  @media (min-width: 640px) { h1 { font-size: var(--s-48); } }
+  .lede { font-size: var(--s-21); line-height: 1.45; margin: 20px 0 32px; }
+  .facts { display: grid; gap: 10px; margin: 0; font-size: var(--s-16); }
+  .facts div { display: grid; grid-template-columns: 7rem 1fr; gap: 16px; }
+  .facts dt { font-family: var(--sans); font-size: var(--s-14); color: var(--graphite); padding-top: 2px; }
+  .facts dd { margin: 0; max-width: 64ch; }
+  @media (max-width: 520px) { .facts div { grid-template-columns: 1fr; gap: 0; } }
+
+  .layout { display: grid; gap: 24px; margin-top: 48px; }
+  .toc { font-family: var(--sans); font-size: var(--s-14); }
+  .toc summary { cursor: pointer; padding: 10px 0; color: var(--graphite); }
+  .toc ol { list-style: none; padding: 0; margin: 0; border-left: 1px solid var(--hairline); }
+  .toc a { display: block; padding: 6px 0 6px 14px; color: var(--graphite); text-decoration: none; margin-left: -1px; border-left: 2px solid transparent; }
+  .toc a:hover { color: var(--ink); }
+  .toc a[aria-current='true'] { color: var(--ink); border-left-color: var(--pump); }
+  @media (min-width: 1100px) {
+    .layout { grid-template-columns: 200px minmax(0, 1fr); gap: 56px; }
+    .toc > details { position: sticky; top: 24px; }
+    .toc summary { pointer-events: none; list-style: none; }
+    .toc summary::-webkit-details-marker { display: none; }
+  }
+
+  .body { min-width: 0; max-width: 860px; }
+  .body section { padding-top: 56px; }
+  .body section:first-child { padding-top: 0; }
+  .body h2 { font-size: var(--s-24); margin-bottom: 16px; }
+  .body h3 { font-size: var(--s-18); margin: 24px 0 8px; }
+  .body code { font-size: 0.9em; background: var(--surface); padding: 1px 6px; border-radius: 4px; }
+  .note { font-size: var(--s-14); color: var(--graphite); margin-top: 8px; }
+
+  .results { width: 100%; border-collapse: collapse; margin: 16px 0; font-family: var(--sans); font-size: var(--s-14); }
+  .results th, .results td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  .results thead th { color: var(--graphite); font-weight: 400; }
+  .results tbody th { font-weight: 400; color: var(--graphite); }
+  .body > section:first-child .results td { font-variant-numeric: tabular-nums; }
+  @media (max-width: 640px) { .results { display: block; overflow-x: auto; } }
+
+  .statements { list-style: none; padding: 0; margin: 0; }
+  .statements li { padding: 12px 0; border-top: 1px solid var(--hairline); }
+  .statements p { margin: 0; }
+  .statements .basis { font-family: var(--sans); font-size: var(--s-14); color: var(--graphite); margin-top: 4px; }
+  .links { display: flex; flex-wrap: wrap; gap: 0 24px; font-size: var(--s-16); }
+  .links a { display: inline-block; padding: 10px 0; }
+
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--hairline); font-size: var(--s-16); }
+  .pager a { color: var(--ink); text-decoration: none; padding: 8px 0; }
+  .pager a:hover { color: var(--pump); }
+  .pager span { display: block; font-size: var(--s-14); color: var(--graphite); }
+  .pager .next { text-align: right; }
+</style>
+
+<script>
+  const links = new Map(
+    [...document.querySelectorAll<HTMLAnchorElement>('.toc a')].map((a) => [a.hash.slice(1), a]),
+  );
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        links.forEach((a) => a.removeAttribute('aria-current'));
+        links.get(e.target.id)?.setAttribute('aria-current', 'true');
+      }
+    },
+    { rootMargin: '-20% 0px -70% 0px' },
+  );
+  document.querySelectorAll('.body section[id]').forEach((s) => io.observe(s));
+  if (window.matchMedia('(max-width: 1099px)').matches) {
+    document.querySelector('.toc details')?.removeAttribute('open');
+  }
+</script>

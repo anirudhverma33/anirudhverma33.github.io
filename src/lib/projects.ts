@@ -143,6 +143,8 @@ export interface MlProject {
   stack: string;
   result?: string;
   repo: string;
+  /** Section id on the machine-learning case-study page. */
+  anchor: string;
 }
 
 const gh = 'https://github.com/anirudhverma33';
@@ -155,6 +157,7 @@ export const mlProjects: MlProject[] = [
     stack: 'PyTorch, Hugging Face Transformers, FastAPI',
     result: 'Validation loss 0.381 → 0.350 over 6 epochs (4,000 training dialogues)',
     repo: `${gh}/t5-text-summarizer`,
+    anchor: 'summariser',
   },
   {
     title: 'Retrieval-augmented generation over PDFs',
@@ -162,6 +165,7 @@ export const mlProjects: MlProject[] = [
       'Loads and chunks PDFs, embeds the chunks into a persistent vector store, retrieves the top matches for a query and passes them as context to an LLM.',
     stack: 'LangChain, sentence-transformers, ChromaDB, Groq LLM',
     repo: `${gh}/rag-pipeline`,
+    anchor: 'rag',
   },
   {
     title: 'Neural networks in PyTorch',
@@ -170,6 +174,7 @@ export const mlProjects: MlProject[] = [
     stack: 'PyTorch, torchvision, NLTK',
     result: 'Test accuracy 95.6% (ANN), 72.5% (CIFAR-10 CNN), 85.2% (RNN); R² 0.935 (ANN regression)',
     repo: `${gh}/ml-projects/tree/main/Deep%20Learning`,
+    anchor: 'neural',
   },
   {
     title: 'Supervised learning projects',
@@ -178,6 +183,7 @@ export const mlProjects: MlProject[] = [
     stack: 'scikit-learn, Pandas',
     result: 'Random Forest 93.8% accuracy (health risk); logistic regression F1 0.81 (loan approval)',
     repo: `${gh}/ml-projects`,
+    anchor: 'supervised',
   },
   {
     title: 'Machine learning from scratch',
@@ -185,6 +191,7 @@ export const mlProjects: MlProject[] = [
       'KNN classification and regression, linear regression by gradient descent and least squares, and logistic regression, written in NumPy.',
     stack: 'NumPy',
     repo: `${gh}/ml-projects/tree/main/Scratch%20Implementation`,
+    anchor: 'scratch',
   },
 ];
 

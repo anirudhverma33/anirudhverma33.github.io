@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { projects, otherWork, mlProjects } from '../../lib/projects';
+import { url } from '../../lib/site';
 
 const [lead, ...rest] = projects;
 ---
@@ -20,14 +21,14 @@ const [lead, ...rest] = projects;
 
     <section class="section" aria-labelledby="ml-h">
       <h2 id="ml-h">Machine learning</h2>
-      <p class="intro">Applied machine-learning projects, from models written in NumPy to fine-tuned transformers. Code and notebooks are on GitHub.</p>
+      <p class="intro">Projects from teaching myself machine learning, from models written in NumPy to a fine-tuned transformer. <a href={url('/research/machine-learning/')}>Read the case study</a> or browse the code on GitHub.</p>
       <ul class="ml">
         {mlProjects.map((m) => (
           <li>
-            <h3><a href={m.repo}>{m.title}</a></h3>
+            <h3><a href={url(`/research/machine-learning/#${m.anchor}`)}>{m.title}</a></h3>
             <p>{m.summary}</p>
             {m.result && <p class="r sans">{m.result}</p>}
-            <p class="s sans">{m.stack}</p>
+            <p class="s sans">{m.stack} · <a href={m.repo}>Code</a></p>
           </li>
         ))}
       </ul>
@@ -63,6 +64,8 @@ const [lead, ...rest] = projects;
   .ml p { margin: 0 0 4px; font-size: var(--s-16); }
   .ml .r { font-size: var(--s-14); color: var(--ink); }
   .ml .s { font-size: var(--s-14); color: var(--graphite); }
+  .ml .s a { color: var(--graphite); }
+  .intro a { color: var(--ink); }
   .other { list-style: none; padding: 0; margin: 0; }
   .other li { padding: 20px 0; border-top: 1px solid var(--hairline); }
   .other h3 { font-size: var(--s-21); margin-bottom: 8px; }

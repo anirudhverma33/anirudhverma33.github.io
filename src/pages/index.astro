@@ -42,7 +42,7 @@ const photoImg: Img = { src: photoCrop.src, width: 320, height: 320, alt: 'Aniru
 
 // Scrolling strip: the clearest figure(s) from each project, physics and machine learning interleaved.
 const research = (slug: string) => url(`/research/${slug}/`);
-const mlHref = url('/research/#ml-h');
+const mlHref = (anchor: string) => url(`/research/machine-learning/#${anchor}`);
 const fig = (slug: string, file: string) => {
   const f = figuresByProject[slug].find((x) => x.src.src.includes(file));
   if (!f) throw new Error(`No figure ${file} in ${slug}`);
@@ -50,19 +50,19 @@ const fig = (slug: string, file: string) => {
 };
 const strip: { src: ImageMetadata; alt: string; label: string; href: string }[] = [
   { ...fig('four-qubit-qrng', 'fq-setup'), label: 'Four-qubit QRNG', href: research('four-qubit-qrng') },
-  { src: mlT5, alt: 'Validation loss of T5-small falling from 0.381 to 0.350 over six epochs of fine-tuning on SAMSum.', label: 'T5 summariser', href: mlHref },
+  { src: mlT5, alt: 'Validation loss of T5-small falling from 0.381 to 0.350 over six epochs of fine-tuning on SAMSum.', label: 'T5 summariser', href: mlHref('summariser') },
   { ...fig('mhv-quantum-walks', 'mhv-five'), label: 'MHV quantum walks', href: research('mhv-quantum-walks') },
   { ...fig('monitored-fermions', 'ms-entropy-l800'), label: 'Monitored fermions', href: research('monitored-fermions') },
-  { src: mlRag, alt: 'Diagram of the RAG pipeline: PDFs, chunks, embeddings and a Chroma vector store feed a retriever, prompt and LLM.', label: 'RAG pipeline', href: mlHref },
+  { src: mlRag, alt: 'Diagram of the RAG pipeline: PDFs, chunks, embeddings and a Chroma vector store feed a retriever, prompt and LLM.', label: 'RAG pipeline', href: mlHref('rag') },
   { ...fig('pr-box-simulation', 'pr-setup'), label: 'PR-box simulation', href: research('pr-box-simulation') },
   { ...fig('entangled-photon-source', 'bs-setup'), label: 'Entangled-photon source', href: research('entangled-photon-source') },
-  { src: mlNeural, alt: 'Test results of four PyTorch networks: 95.6% and R² 0.935 for feed-forward networks, 72.5% on CIFAR-10, 85.2% on IMDB.', label: 'Neural networks', href: mlHref },
+  { src: mlNeural, alt: 'Test results of four PyTorch networks: 95.6% and R² 0.935 for feed-forward networks, 72.5% on CIFAR-10, 85.2% on IMDB.', label: 'Neural networks', href: mlHref('neural') },
   { ...fig('four-qubit-qrng', 'fq-encrypt'), label: 'Four-qubit QRNG', href: research('four-qubit-qrng') },
   { ...fig('mhv-quantum-walks', 'mhv-tree'), label: 'MHV quantum walks', href: research('mhv-quantum-walks') },
-  { src: mlNovagen, alt: 'Accuracy and recall of five classifiers for health-risk prediction; random forest highest at 0.938 accuracy.', label: 'Ensemble learning', href: mlHref },
+  { src: mlNovagen, alt: 'Accuracy and recall of five classifiers for health-risk prediction; random forest highest at 0.938 accuracy.', label: 'Ensemble learning', href: mlHref('supervised') },
   { ...fig('monitored-fermions', 'ms-corr-matrix'), label: 'Monitored fermions', href: research('monitored-fermions') },
   { ...fig('pr-box-simulation', 'pr-chsh'), label: 'PR-box simulation', href: research('pr-box-simulation') },
-  { src: mlCredit, alt: 'F1 scores of three loan-approval classifiers before and after feature engineering.', label: 'Loan approval', href: mlHref },
+  { src: mlCredit, alt: 'F1 scores of three loan-approval classifiers before and after feature engineering.', label: 'Loan approval', href: mlHref('supervised') },
   { ...fig('four-qubit-qrng', 'fq-nist'), label: 'Four-qubit QRNG', href: research('four-qubit-qrng') },
   { ...fig('entangled-photon-source', 'bs-depolarisation'), label: 'Entangled-photon source', href: research('entangled-photon-source') },
 ];
@@ -89,7 +89,7 @@ const projectData: ProjectData[] = await Promise.all(
 const contact = `mailto:${person.email}`;
 const links = { about: '#about', research: '#research', papers: url('/papers/'), contact };
 const aboutText =
-  'I am a physicist working on quantum information with photons. My experimental work uses entangled photon pairs and a four-qubit photonic platform to generate publicly verifiable random numbers and to simulate Popescu–Rohrlich correlations. My theoretical work develops quantum-walk descriptions of scattering amplitudes, and my MS thesis studied free fermions under continuous measurement. Alongside physics I build machine-learning projects, from models written in NumPy to a fine-tuned T5 summariser and a retrieval-augmented generation pipeline.';
+  "I studied physics at IISc Bengaluru (BS and MS) and now work there as a project assistant in the Quantum Optics & Quantum Information Lab. Much of my work is with entangled photons. I worked on a four-qubit photonic setup that produces random numbers anyone can check, and on using it to simulate Popescu–Rohrlich correlations. I also wrote a paper, now under review, that describes gluon scattering amplitudes as quantum walks. My MS thesis was computational, simulating free fermions under continuous measurement. Outside physics, I've been teaching myself machine learning and have built a few projects along the way, including a fine-tuned T5 summariser and a small RAG pipeline.";
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -110,7 +110,7 @@ const jsonLd = {
   <HeroSection
     client:load
     firstName="Anirudh"
-    tagline="a physicist working on quantum information with photons"
+    tagline="I work on quantum optics and quantum information at IISc Bengaluru"
     portrait={sketchImg}
     links={links}
   />
@@ -134,7 +134,7 @@ const jsonLd = {
             <p class="shrink-0 text-sm font-medium uppercase tracking-widest text-[#8E9AA3] sm:w-24 sm:pt-1">{String(i + 1).padStart(2, '0')}</p>
             <div class="flex flex-col gap-2">
               <h3 class="font-medium leading-snug text-[#D7E2EA]" style="font-size: clamp(1rem, 1.8vw, 1.5rem)">
-                <a href={m.repo} class="text-[#D7E2EA] no-underline transition-opacity duration-200 hover:opacity-70">{m.title}</a>
+                <a href={url(`/research/machine-learning/#${m.anchor}`)} class="text-[#D7E2EA] no-underline transition-opacity duration-200 hover:opacity-70">{m.title}</a>
               </h3>
               <p class="text-sm font-light text-[#D7E2EA]/70 sm:text-base">{m.summary}</p>
               {m.result && <p class="text-sm font-light text-[#D7E2EA] sm:text-base">{m.result}</p>}
@@ -146,10 +146,10 @@ const jsonLd = {
     </ol>
     <p class="mx-auto mt-10 max-w-5xl text-center">
       <a
-        href="https://github.com/anirudhverma33/ml-projects"
+        href={url('/research/machine-learning/')}
         class="inline-flex items-center gap-2 rounded-full border-2 border-solid border-[#D7E2EA] px-8 py-3 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] no-underline transition-colors duration-200 hover:bg-[#D7E2EA]/10 sm:px-10 sm:py-3.5 sm:text-base"
       >
-        All notebooks on GitHub
+        Machine learning case study
       </a>
     </p>
   </section>
