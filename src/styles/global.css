@@ -47,7 +47,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; background: var(--plate); }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; background: var(--plate); scroll-padding-top: 96px; }
 
 body {
   margin: 0;

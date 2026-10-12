@@ -14,7 +14,7 @@ interface Props {
   title?: string;
   description: string;
   jsonLd?: object;
-  /** Homepage: the hero carries its own navigation, so the site header is omitted. */
+  /** Homepage: full-bleed sections (the shared site header is still shown). */
   home?: boolean;
 }
 
@@ -23,10 +23,12 @@ const fullTitle = title ? `${title} | ${person.name}` : person.name;
 const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
 const hasCv = existsSync('public/cv.pdf');
 
+const ml = '/research/machine-learning/';
 const nav = [
-  { href: '/research/', label: 'Research' },
-  { href: '/papers/', label: 'Papers' },
-  { href: '/about/', label: 'About' },
+  { href: '/research/', label: 'Research', short: 'Research', current: path.startsWith('/research/') && !path.startsWith(ml) },
+  { href: ml, label: 'Machine learning', short: 'ML', current: path.startsWith(ml) },
+  { href: '/papers/', label: 'Papers', short: 'Papers', current: path.startsWith('/papers/') },
+  { href: '/about/', label: 'About', short: 'About', current: path.startsWith('/about/') },
 ];
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 ---
@@ -48,29 +50,32 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    {!home && (
-    <header class="site-header wrap">
-      <a class="home" href={url('/')} aria-current={path === '/' ? 'page' : undefined}>{person.name}</a>
-      <nav aria-label="Main">
-        <ul>
-          {
-            nav.map((item) => (
+    <header class="site-header">
+      <div class="bar wrap">
+        <a class="home" href={url('/')} aria-current={path === '/' ? 'page' : undefined}>{person.name}</a>
+        <nav aria-label="Main">
+          <ul>
+            {
+              nav.map((item) => (
+                <li>
+                  <a href={url(item.href)} aria-current={item.current ? 'page' : undefined}>
+                    <span class="long">{item.label}</span><span class="short">{item.short}</span>
+                  </a>
+                </li>
+              ))
+            }
+            {hasCv && (
               <li>
-                <a href={url(item.href)} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
-                  {item.label}
-                </a>
+                <a href={url('/cv.pdf')}>CV</a>
               </li>
-            ))
-          }
-          {hasCv && (
+            )}
             <li>
-              <a href={url('/cv.pdf')}>CV</a>
+              <a class="contact" href={`mailto:${person.email}`}>Contact</a>
             </li>
-          )}
-        </ul>
-      </nav>
+          </ul>
+        </nav>
+      </div>
     </header>
-    )}
     <main id="main" class:list={{ landing: home }}>
       <slot />
     </main>
@@ -92,34 +97,52 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
 
 <style>
   .site-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 4px 24px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(12, 12, 12, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--hairline);
     font-family: var(--sans);
     font-size: var(--s-14);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 24px;
+  }
   .site-header a {
     color: var(--ink);
     text-decoration: none;
     display: inline-block;
-    padding: 12px 0;
+    padding: 14px 0 12px;
     border-bottom: 2px solid transparent;
+    white-space: nowrap;
   }
-  .site-header .home { font-weight: 500; }
+  .site-header .home { font-weight: 600; }
   .site-header a:hover { border-bottom-color: var(--hairline); }
   .site-header a[aria-current='page'] { border-bottom-color: #b600a8; }
   .site-header .home[aria-current='page'] { border-bottom-color: transparent; }
-  nav ul { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
-  @media (min-width: 640px) {
+  .site-header .contact { color: #e7b6ff; }
+  nav ul { display: flex; gap: 16px; list-style: none; margin: 0; padding: 0; }
+  .short { display: none; }
+  @media (max-width: 759px) {
+    .bar { justify-content: center; }
+    .home { width: 100%; text-align: center; padding-bottom: 0 !important; }
+    nav { width: 100%; overflow-x: auto; scrollbar-width: none; }
+    nav ul { justify-content: center; gap: 14px; font-size: 0.8rem; }
+    .long { display: none; }
+    .short { display: inline; }
+  }
+  @media (min-width: 900px) {
     .site-header { font-size: var(--s-16); }
-    nav ul { gap: 32px; }
+    nav ul { gap: 28px; }
   }
 
   .site-footer {

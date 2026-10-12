@@ -13,29 +13,8 @@ interface Props {
 }
 
 export default function HeroSection({ name, intro, current, portrait, links, cv, profiles }: Props) {
-  const nav = [
-    { label: 'About', href: links.about },
-    { label: 'Research', href: links.research },
-    { label: 'Papers', href: links.papers },
-    { label: 'Contact', href: links.contact },
-  ];
   return (
-    <section className="relative flex min-h-[88vh] flex-col" style={{ overflowX: 'clip' }}>
-      <FadeIn as="nav" delay={0} y={-20} aria-label="Main" className="relative z-20 px-6 pt-6 md:px-10 md:pt-8">
-        <ul className="flex list-none justify-between">
-          {nav.map((n) => (
-            <li key={n.label}>
-              <a
-                href={n.href}
-                className="inline-block py-2 text-sm font-medium uppercase tracking-wider text-[#D7E2EA] no-underline transition-opacity duration-200 hover:opacity-70 md:text-base"
-              >
-                {n.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </FadeIn>
-
+    <section className="relative flex min-h-[80vh] flex-col" style={{ overflowX: 'clip' }}>
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col-reverse items-center gap-12 px-6 py-16 md:flex-row md:items-center md:justify-between md:gap-16 md:px-10">
         <div className="flex max-w-2xl flex-col gap-6">
           <FadeIn delay={0.1} y={20}>
