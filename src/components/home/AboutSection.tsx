@@ -2,15 +2,17 @@ import FadeIn from './FadeIn';
 import AnimatedText from './AnimatedText';
 import { ContactButton } from './Buttons';
 import { BeamSplitter, BlochSphere, SpdcCones, WavePacket } from './Glyphs';
+import type { Img } from './types';
 
 interface Props {
+  photo: Img;
   text: string;
   role: string;
   contact: string;
   profiles: { label: string; href: string }[];
 }
 
-export default function AboutSection({ text, role, contact, profiles }: Props) {
+export default function AboutSection({ photo, text, role, contact, profiles }: Props) {
   return (
     <section
       id="about"
@@ -47,6 +49,15 @@ export default function AboutSection({ text, role, contact, profiles }: Props) {
           style={{ fontSize: 'clamp(1rem, 2vw, 1.35rem)' }}
         />
         <FadeIn delay={0.1} y={20} className="flex flex-col items-center gap-4">
+          <img
+            src={photo.src}
+            width={photo.width}
+            height={photo.height}
+            alt={photo.alt}
+            loading="lazy"
+            decoding="async"
+            className="mb-2 block h-24 w-24 rounded-full object-cover ring-2 ring-[#D7E2EA]/30 ring-offset-4 ring-offset-[#0C0C0C] sm:h-28 sm:w-28"
+          />
           <p className="max-w-[520px] text-center text-sm font-light uppercase tracking-wide text-[#8E9AA3] sm:text-base">{role}</p>
           <ul className="flex list-none flex-wrap justify-center gap-x-6 gap-y-1">
             {profiles.map((p) => (

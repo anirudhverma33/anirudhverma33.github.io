@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Img } from './types';
+import type { Tile } from './types';
 
-/** Two rows of figure tiles that slide in opposite directions as the page scrolls. */
-export default function MarqueeSection({ images, href }: { images: (Img & { href: string })[]; href?: string }) {
+/** Two rows of project figures that slide in opposite directions as the page scrolls. */
+export default function MarqueeSection({ images }: { images: Tile[] }) {
   const ref = useRef<HTMLElement>(null);
   const [offset, setOffset] = useState(0);
 
@@ -31,7 +31,7 @@ export default function MarqueeSection({ images, href }: { images: (Img & { href
   const rows = [images.slice(0, half), images.slice(half)];
 
   return (
-    <section ref={ref} aria-label="Figures from my papers and theses" className="bg-[#0C0C0C] pb-10 pt-24 sm:pt-32 md:pt-40">
+    <section ref={ref} aria-label="Figures from my projects" className="bg-[#0C0C0C] pb-10 pt-24 sm:pt-32 md:pt-40">
       <div className="flex flex-col gap-3">
         {rows.map((row, r) => {
           const x = r === 0 ? offset - 200 : -(offset - 200);
@@ -46,19 +46,23 @@ export default function MarqueeSection({ images, href }: { images: (Img & { href
                     href={img.href}
                     tabIndex={copy ? -1 : undefined}
                     aria-hidden={copy ? true : undefined}
-                    className="block h-[200px] w-[310px] shrink-0 overflow-hidden rounded-2xl bg-white p-3 sm:h-[270px] sm:w-[420px]"
+                    className="group relative block h-[200px] shrink-0 overflow-hidden rounded-2xl bg-white sm:h-[270px]"
+                    style={{ aspectRatio: `${Math.min(Math.max(img.width / img.height, 1.1), 2.6)}` }}
                   >
                     <img
                       src={img.src}
                       srcSet={img.srcSet}
-                      sizes="420px"
+                      sizes="700px"
                       width={img.width}
                       height={img.height}
                       alt={copy ? '' : img.alt}
                       loading="lazy"
                       decoding="async"
-                      className="block h-full w-full rounded-lg object-contain"
+                      className="block h-full w-full object-contain p-3 pb-10 transition-transform duration-500 group-hover:scale-[1.03]"
                     />
+                    <span className="absolute bottom-2.5 left-3 rounded-full bg-[#0C0C0C] px-3 py-1 text-[11px] font-medium uppercase tracking-widest text-[#D7E2EA] sm:text-xs">
+                      {img.label}
+                    </span>
                   </a>
                 );
               })}

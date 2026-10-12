@@ -71,7 +71,7 @@ export default function HeroSection({ firstName, tagline, portrait, links }: Pro
               height={portrait.height}
               alt={portrait.alt}
               className="block h-auto w-full rounded-[32px] sm:rounded-b-none sm:rounded-t-[48px]"
-              style={{ boxShadow: '0 -20px 80px rgba(118, 33, 176, 0.25)' }}
+              style={{ boxShadow: '0 -20px 80px rgba(118, 33, 176, 0.25)', backgroundColor: '#F4F2EE' }}
               fetchPriority="high"
             />
           </Magnet>

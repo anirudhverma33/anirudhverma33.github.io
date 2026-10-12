@@ -6,6 +6,11 @@ export interface Img {
   alt: string;
 }
 
+export interface Tile extends Img {
+  href: string;
+  label: string;
+}
+
 export interface Links {
   about: string;
   research: string;
