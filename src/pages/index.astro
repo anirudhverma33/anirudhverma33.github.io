@@ -26,7 +26,7 @@ const heroImg: Img = {
   srcSet: (await getImage({ src: photo, widths: [340, 680, 840], format: 'webp' })).srcSet.attribute,
   width: photo.width,
   height: photo.height,
-  alt: 'Anirudh Verma.',
+  alt: 'Anirudh Verma, IISc Bengaluru.',
 };
 
 const projectData: ProjectData[] = await Promise.all(
@@ -51,29 +51,41 @@ const mainExperience = experience.filter((e) => !e.place.startsWith('Mondal Lab'
 const contact = `mailto:${person.email}`;
 const links = { about: '#about', research: '#research', papers: url('/papers/'), contact };
 const aboutText =
-  'I did my BS and MS in physics at IISc Bengaluru, and now work in the Quantum Optics & Quantum Information Lab there. In the lab I run entangled-photon experiments in quantum information and work on quantum walks. My MS thesis treated a monitored fermion chain as an open quantum system, and I have used Qiskit for quantum-computing simulations of molecules. Outside the lab, I am learning machine learning.';
+  "I did my BS and MS in physics at IISc Bengaluru and now work as a project assistant in the Quantum Optics & Quantum Information Laboratory. My BS thesis used polarization-entangled photon pairs from spontaneous parametric down-conversion to generate random numbers, certified by a violation of Bell's inequality. For my MS thesis I studied a free fermionic chain under continuous weak monitoring, an open quantum system, and wrote the code that evolves it along quantum trajectories. I have also worked on publicly verifiable quantum random numbers from a four-qubit photonic system, on simulating Popescu–Rohrlich correlations with non-signaling resources, and on a quantum-walk representation of MHV scattering amplitudes for quantum algorithms in field theory.";
 
+const site = Astro.site ? new URL(url('/'), Astro.site).href : undefined;
+const iisc = { '@type': 'CollegeOrUniversity', name: 'Indian Institute of Science', alternateName: 'IISc Bengaluru', url: 'https://iisc.ac.in/' };
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: person.name,
-  email: `mailto:${person.email}`,
-  affiliation: { '@type': 'Organization', name: 'Indian Institute of Science, Bengaluru' },
-  sameAs: profiles.map((p) => p.href),
-  knowsAbout: person.areas,
+  '@type': 'ProfilePage',
+  url: site,
+  mainEntity: {
+    '@type': 'Person',
+    name: person.name,
+    url: site,
+    image: site ? new URL(heroImg.src, site).href : undefined,
+    email: `mailto:${person.email}`,
+    jobTitle: 'Project Assistant',
+    worksFor: { '@type': 'Organization', name: 'Quantum Optics & Quantum Information Laboratory', parentOrganization: iisc },
+    affiliation: iisc,
+    alumniOf: iisc,
+    sameAs: profiles.map((p) => p.href),
+    knowsAbout: person.areas,
+  },
 };
 ---
 
 <Base
   home
-  description="Anirudh Verma: photonic quantum information, quantum foundations, quantum walks, open quantum many-body systems, quantum computing and applied machine learning. Research, papers and contact."
+  pageTitle="Anirudh Verma | Quantum Information, IISc Bengaluru"
+  description="Anirudh Verma is a physicist at IISc Bengaluru (Indian Institute of Science) working on photonic quantum information, open quantum systems, quantum walks and quantum computing. Research, papers, CV and contact."
   jsonLd={jsonLd}
 >
   <HeroSection
     client:load
     name={person.name}
     current="Project assistant · QOQI Lab, IISc Bengaluru"
-    intro="I work on quantum information, open quantum systems, quantum walks and quantum computing. I also build machine-learning projects."
+    intro="I work on quantum information, open quantum systems, quantum walks and quantum computing, through photonic experiments, theory and numerical simulation."
     portrait={heroImg}
     links={links}
     cv={url('/cv.pdf')}

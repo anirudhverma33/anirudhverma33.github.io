@@ -13,6 +13,12 @@ export const person = {
   emailAlt: 'anirudhverma33@gmail.com',
 };
 
+/** Search-engine ownership codes (Google Search Console, Bing Webmaster Tools). Empty = no tag. */
+export const verification = {
+  google: '',
+  bing: '',
+};
+
 export const profiles = [
   { label: 'Google Scholar', href: 'https://scholar.google.com/citations?user=l3AJ6DEAAAAJ&hl=en' },
   { label: 'ORCID', href: 'https://orcid.org/0009-0007-6945-1909' },

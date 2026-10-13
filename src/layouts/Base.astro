@@ -9,18 +9,22 @@ import '@fontsource/kanit/latin-900.css';
 import '../styles/global.css';
 import { existsSync } from 'node:fs';
 import { Github, GraduationCap, Linkedin } from 'lucide-react';
-import { person, profiles, url } from '../lib/site';
+import { getImage } from 'astro:assets';
+import headshot from '../assets/photo-home.jpg';
+import { person, profiles, url, verification } from '../lib/site';
 
 interface Props {
   title?: string;
+  /** Full <title> override (the homepage uses this to put name and affiliation first). */
+  pageTitle?: string;
   description: string;
   jsonLd?: object;
   /** Homepage: full-bleed sections (the shared site header is still shown). */
   home?: boolean;
 }
 
-const { title, description, jsonLd, home = false } = Astro.props;
-const fullTitle = title ? `${title} | ${person.name}` : person.name;
+const { title, pageTitle, description, jsonLd, home = false } = Astro.props;
+const fullTitle = pageTitle ?? (title ? `${title} | ${person.name}` : person.name);
 const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
 const hasCv = existsSync('public/cv.pdf');
 
@@ -33,6 +37,8 @@ const nav = [
 ];
 const icons: Record<string, typeof Github | null> = { 'Google Scholar': GraduationCap, ORCID: null, GitHub: Github, LinkedIn: Linkedin };
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+// Preview image for search results and link cards.
+const ogImage = Astro.site ? new URL((await getImage({ src: headshot, width: 600, format: 'jpeg' })).src, Astro.site).href : undefined;
 ---
 
 <!doctype html>
@@ -43,9 +49,19 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}
+    <meta name="author" content={person.name} />
+    <meta name="robots" content="index, follow" />
+    {verification.google && <meta name="google-site-verification" content={verification.google} />}
+    {verification.bing && <meta name="msvalidate.01" content={verification.bing} />}
+    <link rel="sitemap" href={url('/sitemap.xml')} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={home ? 'profile' : 'website'} />
+    <meta property="og:site_name" content={person.name} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:alt" content={`${person.name}, IISc Bengaluru`} />}
+    <meta name="twitter:card" content="summary" />
     <meta name="theme-color" content="#0c0c0c" />
     <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
@@ -102,6 +118,8 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     <footer class="site-footer wrap">
       <div class="inner">
       <p>
+        {person.name} · {person.role}
+        <br />
         <a href={`mailto:${person.email}`}>{person.email}</a>
       </p>
       <ul>
