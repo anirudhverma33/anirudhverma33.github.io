@@ -35,7 +35,7 @@ The nav shows a CV link only when `public/cv.pdf` exists. Replace that file to u
 The site address follows the repository name:
 
 - `anirudhverma33.github.io` → `https://anirudhverma33.github.io/`
-- any other name, e.g. `portfolio` → `https://anirudhverma33.github.io/portfolio/`
+- any other name, e.g. `portfolio` → `https://anirudhverma33.github.io/portfolio/` (the live site uses the `anirudhverma33.github.io` repository, so it is served at the root)
 
 Renaming the repository later, or adding a custom domain in Settings → Pages, needs no code change: the workflow passes the address to the build.
 
