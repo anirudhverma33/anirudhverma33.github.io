@@ -15,7 +15,7 @@ export const person = {
 
 /** Search-engine ownership codes (Google Search Console, Bing Webmaster Tools). Empty = no tag. */
 export const verification = {
-  google: '',
+  google: 'oM3dUdm-y81VZEG9ssXfent2Gor9Lc0VpgPJt-xvZL4',
   bing: '',
 };
 
